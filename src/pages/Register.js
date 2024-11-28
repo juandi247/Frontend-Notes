@@ -16,47 +16,41 @@ const Register = () => {
   const navigate = useNavigate(); // Inicializa useNavigate
   const API_URL = "https://backendnotes-production.up.railway.app/auth/register";
 
-
-  const validateToken = async () => {
-    const token = await AsyncStorage.getItem('authToken');
-
-    if (token) {
-      try {
-        // Hacer una solicitud al API de validación del token
-        const response = await fetch('https://backendnotes-production.up.railway.app/auth/register', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        const data = await response.json();
-        console.log("TOKENNNN", token)
-
-        // Si la validación es exitosa, redirigir al home
-        if (data===true) {
-          navigate('/home');
-          console.log("BIEN")
-     
-        } else {
-          // Si no es válido, redirigir al login
+  useEffect(() => {
+    const validateToken = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+  
+      if (token) {
+        try {
+          const response = await fetch('https://backendnotes-production.up.railway.app/auth/register', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+  
+          const data = await response.json();
+          console.log("TOKENNNN", token);
+  
+          if (data === true) {
+            navigate('/home');
+            console.log("BIEN");
+          } else {
+            navigate('/register');
+            console.log("MAL");
+          }
+        } catch (error) {
+          console.error('Error al validar el token:', error);
           navigate('/register');
-          console.log("MAL")
         }
-      } catch (error) {
-        // En caso de error en la validación
-        console.error('Error al validar el token:', error);
+      } else {
         navigate('/register');
       }
-    } else {
-      // Si no hay token, redirigir al login
-      navigate('/register');
-    }
-  };
-
-  useEffect(() => {
+    };
+  
     validateToken();
-  }, []);
+  }, [navigate]);  // No es necesario agregar validateToken en las dependencias ahora.
+  
 
   
   const handleSubmit = async (e) => {

@@ -334,7 +334,7 @@ const handleShowDeleteConfirmation = (id) => {
         console.error("Error fetching notes:", error);
         setError("Error fetching notes");
       });
-  }, [token]);
+  }, [token,navigate]);
 
 
 
@@ -365,29 +365,27 @@ const handleShowDeleteConfirmation = (id) => {
     }
   };
 
-
-
-  // Cargar notas archivadas al abrir el modal
-  const fetchArchivedNotes = () => {
-    fetch("https://backendnotes-production.up.railway.app/note/archived", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      mode: "cors",
-    })
-      .then((response) => response.json())
-      .then((data) => setArchivedNotes(data))
-      .catch((error) => {
-        console.error("Error fetching archived notes:", error);
-        setError("Error fetching archived notes");
-      });
-  };
   useEffect(() => {
+    const fetchArchivedNotes = () => {
+      fetch("https://backendnotes-production.up.railway.app/note/archived", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        mode: "cors",
+      })
+        .then((response) => response.json())
+        .then((data) => setArchivedNotes(data))
+        .catch((error) => {
+          console.error("Error fetching archived notes:", error);
+          setError("Error fetching archived notes");
+        });
+    };
+  
     if (showArchivedModal) {
       fetchArchivedNotes();
     }
-  }, [showArchivedModal]);
+  }, [showArchivedModal, token]);  // Se agregan las dependencias necesarias
   
 
 

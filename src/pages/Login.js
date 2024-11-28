@@ -9,60 +9,45 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate(); // Para redirigir después del login exitoso
 
-
-  const validateToken = async () => {
-    const token = await AsyncStorage.getItem('authToken');
-
-    if (token) {
-      setLoading(true); 
-      try {
-        // Hacer una solicitud al API de validación del token
-        const response = await fetch('https://backendnotes-production.up.railway.app/auth/validate', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-
-        const data = await response.json();
-        console.log("TOKENNNN", token)
-
-
-        // Si la validación es exitosa, redirigir al home
-        if (data===true) {
-
-          navigate('/home');
-          console.log("BIEN")
-
-     
-        } else {
-          // Si no es válido, redirigir al login
-          navigate('/');
-          console.log("MAL")
-          setLoading(false); 
-
-
-        }
-      } catch (error) {
-        // En caso de error en la validación
-        console.error('Error al validar el token:', error);
-        navigate('/');
-        setLoading(false); 
-
-      }
-    } else {
-      // Si no hay token, redirigir al login
-      navigate('/');
-      setLoading(false); 
-
-    }
-  };
-
-  // Ejecutar la validación al montar el componente
   useEffect(() => {
+    const validateToken = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+  
+      if (token) {
+        setLoading(true);
+        try {
+          const response = await fetch('https://backendnotes-production.up.railway.app/auth/validate', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+  
+          const data = await response.json();
+          console.log("TOKENNNN", token);
+  
+          if (data === true) {
+            navigate('/home');
+            console.log("BIEN");
+          } else {
+            navigate('/');
+            console.log("MAL");
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error('Error al validar el token:', error);
+          navigate('/');
+          setLoading(false);
+        }
+      } else {
+        navigate('/');
+        setLoading(false);
+      }
+    };
+  
     validateToken();
-  }, []);
-
+  }, [navigate]);  // Ya no es necesario agregar validateToken en las dependencias
+  
 
   
 
