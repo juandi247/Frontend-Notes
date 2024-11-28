@@ -54,7 +54,6 @@ const Register = () => {
     }
   };
 
-  // Ejecutar la validación al montar el componente
   useEffect(() => {
     validateToken();
   }, []);

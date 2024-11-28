@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Importa el hook useNavigate
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
@@ -118,8 +116,7 @@ const handleUnarchiveNote = async (id) => {
       );
   
       if (response.ok) {
-        // Mostrar mensaje de éxito por 2 segundos
-        const updatedNote = await response.json();
+        
         setNotes((prevNotes) =>
           prevNotes.filter((note) => note.id !== id) // Eliminar la nota archivada de las notas activas
         
